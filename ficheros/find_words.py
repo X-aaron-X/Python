@@ -18,32 +18,45 @@ def run(data_path: Path, target_word: str) -> list:
     matches = []
     buscar = target_word.lower()
     
-    fichero = open(data_path, 'r', encoding='utf-8')
-    contenido = [item.rstrip('\n').lower() for item in fichero.readlines()]
-    palabraTamano = len(buscar)
-    
-    for num_linea, linea in enumerate(contenido, start=1):
-        if buscar in linea:
+    # Opcion 1
+    with open(data_path, 'r', encoding='utf-8') as fichero:
+        for numLinea, linea in enumerate(fichero, start = 1):         
+            linea = linea.lower()
             palabras = linea.split()
-            
             cont = 0
-            for palabra in palabras:
-                limpiando = palabra.strip(".,:;()'¡!-")
-                
-                cont += len(palabra) + 1
-                parentesis = buscar + ')'
-                coma = buscar + ','
-                comillas = "'" +buscar
-
-                if palabra == buscar or palabra == comillas:
-                    matches.append((num_linea, cont - (palabraTamano - 1) - 1))
-                elif palabra == parentesis or palabra == coma:
-                    matches.append((num_linea, cont - (palabraTamano - 1) - 2))
             
-    print(matches)
+            for palabra in palabras:
+                cont += len(palabra) + 1
+                
+                if palabra.rstrip(",)") == buscar:
+                    matches.append((numLinea, cont - len(palabra)))
+                elif palabra.startswith("'") and palabra[1:] == buscar:
+                    matches.append((numLinea, cont - len(palabra) + 1))
+            
+    # Opcion 2            
+    # fichero = open(data_path, 'r', encoding='utf-8')
+    # contenido = [item.rstrip('\n').lower() for item in fichero.readlines()]
+    # palabraTamano = len(buscar)
     
+    # for numLinea, linea in enumerate(contenido, start=1):
+    #     if buscar in linea:
+    #         palabras = linea.split()
+            
+    #         cont = 0
+    #         for palabra in palabras:
+    #             cont += len(palabra) + 1
+    #             parentesis = buscar + ')'
+    #             coma = buscar + ','
+    #             comillas = "'" +buscar
+                
+    #             if palabra == buscar or palabra == parentesis or palabra == coma:
+    #                 matches.append((numLinea, cont - len(palabra)))
+    #             elif palabra == comillas:
+    #                 matches.append((numLinea, cont - (palabraTamano)))
+
+    print(matches)
+
     return matches
 
-
 if __name__ == '__main__':
-    run('data/find_words/bzrp.txt', 'tú')
+    run('data/find_words/bzrp.txt', 'tás')
