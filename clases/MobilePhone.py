@@ -13,7 +13,10 @@ class MobilePhone:
         self.status = False
     
     def install_app(self, *apps):
-        self.apps.extend(apps)
+        if apps not in self.apps:
+            self.apps.extend(apps)
+        else:
+            print(f"{apps} ya esta instalado")
     
     def uninstall_app(self, app):
         if app in self.apps:
